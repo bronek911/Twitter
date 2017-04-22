@@ -6,6 +6,7 @@ class User {
     private $username;
     private $email;
     private $hashPass;
+    
 
     function __construct() {
         $this->id = -1;

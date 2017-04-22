@@ -1,0 +1,10 @@
+{
+    "name": "bronek/twitter",
+    "authors": [
+        {
+            "name": "Michal Bronowski",
+            "email": "bronus911@gmail.com"
+        }
+    ],
+    "require": {}
+}

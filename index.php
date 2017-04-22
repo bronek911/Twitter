@@ -2,6 +2,10 @@
 session_start();
 require_once('src/headers.php');
 
+if(isset($_SESSION['isLogged']) && $_SESSION['isLogged']==1){
+    header('Location: main.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['login']) && $_POST['login'] == 1) {
@@ -22,19 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             //Verifying if password from the form is same as in database
             if (password_verify($password, $hash)) { //If it is
                 //Saving info about user to session variables
-                $_SESSION['isLogged'] = true;
+                $_SESSION['isLogged'] = 1;
                 $_SESSION['userId'] = $user->getId();
                 $_SESSION['userName'] = $user->getUsername();
                 $_SESSION['userEmail'] = $user->getEmail();
+//                echo '<pre>';
+//                print_r($_SESSION);
+//                echo '</pre>';
+//                die();
                 //Redirects us to file main.php
                 header('Location: main.php');
             } else { //If isn't
                 //header('Location: index.php');
-                echo '<pre>';
-                print_r($user);
-                echo "<br>$password";
-                echo '</pre>';
-                die();
+                
             }
         } else {
             
