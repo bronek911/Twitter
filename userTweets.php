@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     for ($i = 0; $i < count($tweets); $i++) {
 
-                        showTweet($tweets, $i);
+                        showTweet($tweets, $i, $conn);
                     }
                     ?>
 

@@ -7,41 +7,40 @@ if (!isset($_SESSION['isLogged']) || $_SESSION['isLogged'] !== 1) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-
-    if (isset($_POST['tweet'])) {
-        
-        $id_tweet = $_POST['id_tweet'];
+    if (isset($_POST['comment'])) {
+        $id_comment = $_POST['id_comment'];
         $id_user = $_SESSION['userId'];
-        $tweet = trim($_POST['tweet']);
+        $id_tweet = $_POST['id_tweet'];
+        $comment = trim($_POST['comment']);
         $dateTimeNow = new DateTime("now");
         $format = "Y-m-d H:i:s";
+        $dateTime = $dateTimeNow->format($format);
+        
 
-        if (strlen($tweet) > 0) {
-            $newTweet = Tweets::loadTweetById($conn, $id_tweet);
-            $newTweet->setTweet($tweet);
-            $newTweet->saveToDB($conn);
-
-            header('Location: main.php');
+        if (strlen($comment) > 0) {
+            $newComment = Comment::loadCommentById($conn, $id_comment);
+            $newComment->setCommentText($comment);
+            $newComment->saveToDB($conn);
+            header('Location: userTweets.php');
         }
     } else {
         echo "Brak danych!";
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-
+    
     if (isset($_GET['id'])) {
-        $id_tweet = $_GET['id'];
-        $tweet = Tweets::loadTweetById($conn, $id_tweet);
+        $id_comment = $_GET['id'];
+        $comment = Comment::loadCommentById($conn, $id_comment);
 
-        if ($tweet->getUsername() === $_SESSION['userName']) {
-
-            $id_user = $tweet->getId_User();
-            $tweetText = $tweet->getTweet();
-            $dateTime = $tweet->getDateTime();
-            $username = $tweet->getUsername();
-        } else {
-
+        if ($comment->getId_user() === $_SESSION['userId']) {
+            
+            $id_tweet = $comment->getId_tweet();
+            $id_user = $comment->getId_user();
+            $commentText = $comment->getCommentText();
+            $dateTime = $comment->getDateTime();
+        }else{
+            
             return false;
         }
     }
@@ -82,17 +81,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php
 //Editing tweet
 
-                    $tweet = Tweets::loadTweetById($conn, $id_tweet);
+                    $comment = Comment::loadCommentById($conn, $id_comment);
 
                     echo "
             <div class='form-group'>
                 <form action='' method='post'>
                     <div class='panel panel-default'>
-                        <div class='panel-body'>ID:{$tweet->getId_tweet()}&nbsp;&nbsp;&nbsp;<b>{$tweet->getUsername()}</b> - utworzono: {$tweet->getDateTime()}</div>
+                        <div class='panel-body'>ID:{$comment->getId_comment()}&nbsp;&nbsp;&nbsp;<b>{$comment->getUsername()}</b> - utworzono: {$comment->getDateTime()}</div>
                       
-                    <textarea class='form-control' rows='5' id='tweet' name='tweet' style='margin-top:0px;'>" . $tweetText . "</textarea>
-                    <input type='hidden' name='id_tweet' value='{$tweet->getId_tweet()}'></input>
-                    <button type='submit' class='btn btn-primary btn-block'>Save tweet!</button>
+                    <textarea class='form-control' rows='5' id='comment' name='comment' style='margin-top:0px;'>" . $commentText . "</textarea>
+                    <input type='hidden' name='id_comment' value='{$comment->getId_comment()}'></input>
+                    <input type='hidden' name='id_tweet' value='{$comment->getId_tweet()}'></input>
+                    <button type='submit' class='btn btn-primary btn-block'>Save comment!</button>
                     </div>
                 </form>
             </div><br>

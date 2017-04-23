@@ -19,8 +19,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newTweet->saveToDB($conn);
             header('Location: main.php');
         }
-    } else {
+    } else if(isset($_POST['comment'])){
         
+        $id_user = $_SESSION['userId'];
+        $id_tweet = $_POST['id_tweet'];
+        $commentText = trim($_POST['comment']);
+        $dateTimeNow = new DateTime("now");
+        $format = "Y-m-d H:i:s";
+        $dateTime = $dateTimeNow->format($format);
+
+        if (strlen($commentText) > 0) {
+            $newComment = new Comment();
+            
+            $newComment->setId_tweet($id_tweet);
+            $newComment->setId_user($id_user);
+            $newComment->setCommentText($commentText);
+            $newComment->setDateTime($dateTime);
+                    
+            $newComment->saveToDB($conn);
+            
+            
+            
+            header('Location: main.php');
+        }
     }
 }
 ?>
@@ -58,13 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     //Form for adding a tweet
                     showTweetTextarea();
 
-                    //Displaying tweets
+                 //Displaying tweets
 
                     $tweets = Tweets::loadAllTweets($conn);
 
                     for ($i = 0; $i < count($tweets); $i++) {
-
-                        showTweet($tweets, $i);
+                        showTweet($tweets, $i, $conn);
                     }
                     ?>
 
