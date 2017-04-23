@@ -7,6 +7,7 @@ class Tweets {
     private $tweet;
     private $dateTime;
     private $username;
+    private $img_src;
 
     function __construct() {
         $this->id_tweet = -1;
@@ -27,9 +28,17 @@ class Tweets {
     function getDateTime() {
         return $this->dateTime;
     }
-    
+
     function getUsername() {
         return $this->username;
+    }
+
+    function getImg_src() {
+        return $this->img_src;
+    }
+
+    function setImg_src($img_src) {
+        $this->img_src = $img_src;
     }
 
     function setUsername($username) {
@@ -37,7 +46,7 @@ class Tweets {
         return $this;
     }
 
-        function setId_user($id_user) {
+    function setId_user($id_user) {
         $this->id_user = $id_user;
         return $this;
     }
@@ -83,7 +92,7 @@ class Tweets {
     }
 
     static public function loadTweetById(PDO $conn, $id_tweet) {
-        $stmt = $conn->prepare('SELECT id_tweet, id_user, tweet, dateTime, username FROM Tweets JOIN users ON Tweets.id_user=users.id WHERE Tweets.id_tweet=:id_tweet;');
+        $stmt = $conn->prepare('SELECT id_tweet, id_user, tweet, dateTime, username, img_src FROM Tweets JOIN users ON Tweets.id_user=users.id WHERE Tweets.id_tweet=:id_tweet;');
         $result = $stmt->execute(['id_tweet' => $id_tweet]);
 
         if ($result === true && $stmt->rowCount() > 0) {
@@ -93,6 +102,7 @@ class Tweets {
             $loadedTweet->id_tweet = $row['id_tweet'];
             $loadedTweet->id_user = $row['id_user'];
             $loadedTweet->username = $row['username'];
+            $loadedTweet->img_src = $row['img_src'];
             $loadedTweet->tweet = $row['tweet'];
             $loadedTweet->dateTime = $row['dateTime'];
 
@@ -104,7 +114,7 @@ class Tweets {
     }
 
     static public function loadAllTweets(PDO $conn) {
-        $sql = 'SELECT id_tweet, id_user, tweet, dateTime, username FROM Tweets JOIN users ON Tweets.id_user=users.id ORDER BY id_tweet DESC;';
+        $sql = 'SELECT id_tweet, id_user, tweet, dateTime, username, img_src FROM Tweets JOIN users ON Tweets.id_user=users.id ORDER BY id_tweet DESC;';
         $ret = [];
 
         $result = $conn->query($sql);
@@ -114,6 +124,7 @@ class Tweets {
                 $loadedTweets->id_tweet = $row['id_tweet'];
                 $loadedTweets->id_user = $row['id_user'];
                 $loadedTweets->username = $row['username'];
+                $loadedTweets->img_src = $row['img_src'];
                 $loadedTweets->tweet = $row['tweet'];
                 $loadedTweets->dateTime = $row['dateTime'];
 
@@ -122,20 +133,21 @@ class Tweets {
         }
         return $ret;
     }
-    
+
     static public function loadAllUserTweets(PDO $conn, $id_user) {
         $ret = [];
-        $stmt = $conn->prepare('SELECT id_tweet, id_user, tweet, dateTime, username FROM Tweets JOIN users ON Tweets.id_user=users.id WHERE Tweets.id_user=:id_user ORDER BY Tweets.id_tweet DESC;');
+        $stmt = $conn->prepare('SELECT id_tweet, id_user, tweet, dateTime, username, img_src FROM Tweets JOIN users ON Tweets.id_user=users.id WHERE Tweets.id_user=:id_user ORDER BY Tweets.id_tweet DESC;');
         $stmt->execute(['id_user' => $id_user]);
         $result = $stmt->fetchAll();
-        
-        
+
+
         if ($result !== false && count($result) != 0) {
             foreach ($result as $tweetNo => $tweet) {
                 $loadedTweets = new Tweets();
                 $loadedTweets->id_tweet = $tweet['id_tweet'];
                 $loadedTweets->id_user = $tweet['id_user'];
                 $loadedTweets->username = $tweet['username'];
+                $loadedTweets->img_src = $tweet['img_src'];
                 $loadedTweets->tweet = $tweet['tweet'];
                 $loadedTweets->dateTime = $tweet['dateTime'];
 

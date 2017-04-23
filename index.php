@@ -21,6 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             //Creating object of class User
             $user = User::loadUserByUsername($conn, $username);
             //Getting users hased password from the database
+            if($user==null){
+                header("Location: index.php");
+            }
             $hash = $user->getHashPass();
             
             //Verifying if password from the form is same as in database

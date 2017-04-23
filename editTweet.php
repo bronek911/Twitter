@@ -2,6 +2,10 @@
 session_start();
 require_once('src/headers.php');
 
+if (!isset($_SESSION['isLogged']) || $_SESSION['isLogged'] !== 1) {
+    header('Location: index.php');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['tweet'])) {
         $id_user = $_SESSION['userId'];
@@ -19,14 +23,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Brak danych!";
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+    
     if (isset($_GET['id'])) {
         $id_tweet = $_GET['id'];
-
         $tweet = Tweets::loadTweetById($conn, $id_tweet);
-        $id_user = $tweet->getId_User();
-        $tweetText = $tweet->getTweet();
-        $dateTime = $tweet->getDateTime();
-        $username = $tweet->getUsername();
+
+        if ($tweet->getUsername() === $_SESSION['userName']) {
+            
+            $id_user = $tweet->getId_User();
+            $tweetText = $tweet->getTweet();
+            $dateTime = $tweet->getDateTime();
+            $username = $tweet->getUsername();
+        }else{
+            
+            return false;
+        }
     }
 } else {
     

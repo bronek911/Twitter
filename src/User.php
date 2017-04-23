@@ -6,7 +6,7 @@ class User {
     private $username;
     private $email;
     private $hashPass;
-    
+    private $img_src;
 
     function __construct() {
         $this->id = -1;
@@ -31,6 +31,14 @@ class User {
         return $this->hashPass;
     }
 
+    function getImg_src() {
+        return $this->img_src;
+    }
+
+    function setImg_src($img_src) {
+        $this->img_src = $img_src;
+    }
+
     public function setUsername($username) {
 
         function filterName($name, $filter = "[^a-zA-Z0-9\-\_\.]") {
@@ -39,7 +47,7 @@ class User {
 
         if (strlen($username) >= 20 || strlen($username) < 4) {
             throw new Exception('Allowed length of username if between 4 and 20 characters!');
-        } else if (!ctype_alnum($username)){
+        } else if (!ctype_alnum($username)) {
             throw new Exception('Only alphanumeric characters!');
         } else {
             $this->username = $username;
@@ -62,7 +70,6 @@ class User {
         return $this;
     }
 
-    
     public function saveToDB(PDO $conn) {
         if ($this->id == -1) {
             //Saving new user to database
@@ -80,10 +87,11 @@ class User {
                 return true;
             }
         } else {
-            $stmt = $conn->prepare('UPDATE Users SET username=:username, email=:email, hash_pass=:hash_pass WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE Users SET username=:username, email=:email, hash_pass=:hash_pass, img_src=:img_src WHERE id=:id');
             $result = $stmt->execute([
                 'username' => $this->username,
                 'email' => $this->email,
+                'img_src' => $this->img_src,
                 'hash_pass' => $this->hashPass,
                 'id' => $this->id
             ]);
@@ -107,6 +115,7 @@ class User {
             $loadedUser->username = $row['username'];
             $loadedUser->hashPass = $row['hash_pass'];
             $loadedUser->email = $row['email'];
+            $loadedUser->img_src = $row['img_src'];
 
             return $loadedUser;
         } else {
@@ -126,6 +135,27 @@ class User {
             $loadedUser->username = $row['username'];
             $loadedUser->hashPass = $row['hash_pass'];
             $loadedUser->email = $row['email'];
+            $loadedUser->img_src = $row['img_src'];
+
+            return $loadedUser;
+        } else {
+            return null;
+        }
+    }
+
+    static public function loadUserByEmail(PDO $conn, $email) {
+        $stmt = $conn->prepare('SELECT * FROM Users WHERE email=:email');
+        $result = $stmt->execute(['email' => $email]);
+
+        if ($result === true && $stmt->rowCount() > 0) {
+            $row = $stmt->fetch();
+
+            $loadedUser = new User();
+            $loadedUser->id = $row['id'];
+            $loadedUser->username = $row['username'];
+            $loadedUser->hashPass = $row['hash_pass'];
+            $loadedUser->email = $row['email'];
+            $loadedUser->img_src = $row['img_src'];
 
             return $loadedUser;
         } else {
@@ -145,6 +175,7 @@ class User {
                 $loadedUser->username = $row['username'];
                 $loadedUser->hashPass = $row['hash_pass'];
                 $loadedUser->email = $row['email'];
+                $loadedUser->img_src = $row['img_src'];
 
                 $ret[] = $loadedUser;
             }

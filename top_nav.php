@@ -1,6 +1,9 @@
 <?php
 
+require_once('src/headers.php');
 
+$id_user = $_SESSION['userId'];
+$user = User::loadUserById($conn, $id_user);
 
 
 echo "
@@ -28,7 +31,7 @@ echo "
         <li class='dropdown'>
           <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>Settings <span class='caret'></span></a>
           <ul class='dropdown-menu'>
-            <li><a href='#'>Your profile</a></li>
+            <li><a href='userSettings.php?user={$user->getUsername()}'>Your profile</a></li>
             <li role='separator' class='divider'></li>
             <li><a href='logout.php'>Logout</a></li>
           </ul>

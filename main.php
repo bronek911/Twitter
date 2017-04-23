@@ -1,30 +1,28 @@
-<?php 
+<?php
 session_start();
 require_once('src/headers.php');
 
-if(!isset($_SESSION['isLogged']) || $_SESSION['isLogged']!==1){
+if (!isset($_SESSION['isLogged']) || $_SESSION['isLogged'] !== 1) {
     header('Location: index.php');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if(isset($_POST['tweet'])){
+    if (isset($_POST['tweet'])) {
         $id_user = $_SESSION['userId'];
         $tweet = trim($_POST['tweet']);
         $dateTimeNow = new DateTime("now");
         $format = "Y-m-d H:i:s";
-        
-        if(strlen($tweet)>0){
+
+        if (strlen($tweet) > 0) {
             $newTweet = new Tweets();
             $newTweet->setId_user($id_user)->setTweet($tweet)->setDateTime($dateTimeNow->format($format));
             $newTweet->saveToDB($conn);
             header('Location: main.php');
         }
+    } else {
         
-    }else{
     }
-    
 }
-
 ?>
 <!DOCTYPE html>
 
@@ -44,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <body>
 
-        
+
         <?php require_once('top_nav.php'); ?>
         <div class="container-fluid">
             <div class="row">
@@ -55,43 +53,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     &nbsp;
                 </div>
                 <div class="col-lg-6 col-mg-6 col-sm-6">
-                    
+
                     <?php
-                    
-//Form for adding a tweet
-echo "
-            <div class='form-group'>
-                <form action='main.php' method='post'>
-                    <textarea class='form-control' rows='5' id='comment' name='tweet' placeholder='Write something...'></textarea>
-                    <button type='submit' class='btn btn-primary btn-block'>Tweet!</button>
-                </form>
-            </div><br>
-        ";
+                    //Form for adding a tweet
+                    showTweetTextarea();
 
-//Displaying tweets
+                    //Displaying tweets
 
-$tweets = Tweets::loadAllTweets($conn);
+                    $tweets = Tweets::loadAllTweets($conn);
 
-for ($i = 0; $i < count($tweets); $i++) {
-    
-    echo "<div class='panel panel-default'>
-  <div class='panel-heading'>"; echo $tweets[$i]->getUsername(); echo" 
-  <span class='navbar-right' style='margin-right:10px;margin-top:0px;'>
-                    <div class='dropdown'>
-                        <a class='dropdown-toggle' data-toggle='dropdown' href='#'><span class='glyphicon glyphicon-chevron-down'></span></a>
-                        <ul class='dropdown-menu' role='menu' aria-labelledby='menu1'>
-                            <li role='presentation'><a role='menuitem' tabindex='-1' href='editTweet.php?id={$tweets[$i]->getId_tweet()}'>Edytuj</a></li>
-                            <li role='presentation'><a role='menuitem' tabindex='-1' href='deleteTweet.php?id={$tweets[$i]->getId_tweet()}'>Usuń</a></li>
-                        </ul>
-                    </div>
-                </span>
-                </div>
-  <div class='panel-body'>"; echo $tweets[$i]->getTweet(); echo"</div>
-</div>";
-}
-  
+                    for ($i = 0; $i < count($tweets); $i++) {
+
+                        showTweet($tweets, $i);
+                    }
                     ?>
-                    
+
                 </div>
             </div>
         </div>  

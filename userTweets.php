@@ -2,9 +2,9 @@
 session_start();
 require_once('src/headers.php');
 
-//if(isset($_SESSION['islogged']) && $_SESSION['islogged']!==1){
-//    header('Location: index.php');
-//}
+if (!isset($_SESSION['isLogged']) || $_SESSION['isLogged'] !== 1) {
+    header('Location: index.php');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['tweet'])) {
@@ -43,54 +43,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body>
 
 
-<?php require_once('top_nav.php'); ?>
+        <?php require_once('top_nav.php'); ?>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-3 col-mg-3 col-sm-3">
-<?php require_once('left_bar.php'); ?>
+                    <?php require_once('left_bar.php'); ?>
                 </div>
                 <div class="col-lg-1 col-mg-1 col-sm-1">
                     &nbsp;
                 </div>
                 <div class="col-lg-6 col-mg-6 col-sm-6">
 
-<?php
+                    <?php
 //Form for adding a tweet
-echo "
-            <div class='form-group'>
-                <form action='userTweets.php' method='post'>
-                    <textarea class='form-control' rows='5' id='comment' name='tweet' placeholder='Write something...'></textarea>
-                    <button type='submit' class='btn btn-primary btn-block'>Tweet!</button>
-                </form>
-            </div><br>
-        ";
+                    showTweetTextarea();
 
 //Displaying tweets
 
-$tweets = Tweets::loadAllUserTweets($conn, $_SESSION['userId']);
+                    $tweets = Tweets::loadAllUserTweets($conn, $_SESSION['userId']);
 
-for ($i = 0; $i < count($tweets); $i++) {
+                    for ($i = 0; $i < count($tweets); $i++) {
 
-    echo "<div class='panel panel-default'>
-  <div class='panel-heading'>";
-    echo $tweets[$i]->getUsername();
-    echo" 
-  <span class='navbar-right' style='margin-right:10px;margin-top:0px;'>
-                    <div class='dropdown'>
-                        <a class='dropdown-toggle' data-toggle='dropdown' href='#'><span class='glyphicon glyphicon-chevron-down'></span></a>
-                        <ul class='dropdown-menu' role='menu' aria-labelledby='menu1'>
-                            <li role='presentation'><a role='menuitem' tabindex='-1' href='editTweet.php?id={$tweets[$i]->getId_tweet()}'>Edytuj</a></li>
-                            <li role='presentation'><a role='menuitem' tabindex='-1' href='deleteTweet.php?id={$tweets[$i]->getId_tweet()}'>Usuń</a></li>
-                        </ul>
-                    </div>
-                </span>
-                </div>
-  <div class='panel-body'>";
-    echo $tweets[$i]->getTweet();
-    echo"</div>
-</div>";
-}
-?>
+                        showTweet($tweets, $i);
+                    }
+                    ?>
 
                 </div>
             </div>
