@@ -9,11 +9,6 @@ if (!isset($_SESSION['isLogged']) || $_SESSION['isLogged'] !== 1) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['message'])) {
         
-//        echo '<pre>';
-//        print_r($_POST);
-//        echo '</pre>';
-//        die();
-        
         $id_sender = $_SESSION['userId'];
         $id_receiver = $_GET['userId'];
         $message = trim($_POST['message']);
