@@ -118,7 +118,7 @@ function showMessages($messages, $conn) {
         echo "
             
         <div class='panel panel-default'>
-            <div class='panel-heading'>".$username->getUsername()."</div>
+            <div class='panel-heading'>".$username->getUsername()." - <small><small>".$messages[$i]->getDateTime()."</small></small></div>
             <div class='panel-body'>{$messages[$i]->getMessage()}</div>
         </div>
     ";

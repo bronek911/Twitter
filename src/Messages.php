@@ -90,7 +90,7 @@ class Messages {
 
     static public function loadConversationMessages(PDO $conn, $id_conversation) {
         $ret = [];
-        $stmt = $conn->prepare('SELECT id_message, message, dateTime, Messages.id_sender, id_receiver FROM Messages JOIN Conversation ON Messages.id_conversation=Conversation.id_conversation WHERE Conversation.id_conversation=:id_conversation;');
+        $stmt = $conn->prepare('SELECT id_message, message, dateTime, Messages.id_sender, id_receiver FROM Messages JOIN Conversation ON Messages.id_conversation=Conversation.id_conversation WHERE Conversation.id_conversation=:id_conversation ORDER BY id_message DESC;');
         $stmt->execute(['id_conversation' => $id_conversation]);
         $result = $stmt->fetchAll();
 

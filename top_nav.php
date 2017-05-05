@@ -8,7 +8,7 @@ $user = User::loadUserById($conn, $id_user);
 
 echo "
     <div class='jumbotron' style='margin-bottom:0;'>
-            <h1>&nbsp;&nbsp;&nbsp;Main site</h1>
+            <h1>&nbsp;&nbsp;&nbsp;Twitter</h1>
         </div>
 <nav class='navbar navbar-default'>
   <div class='container-fluid'>
@@ -20,13 +20,13 @@ echo "
         <span class='icon-bar'></span>
         <span class='icon-bar'></span>
       </button>
-      <a class='navbar-brand' href='#'>Twitter</a>
+      <a class='navbar-brand' href='main.php'>Twitter</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
       <ul class='nav navbar-nav'>
-        <li class='active'><a href='main.php'>All tweets <span class='sr-only'>(current)</span></a></li>
+        
         <li><a href='userTweets.php'>Your tweets</a></li>
         <li class='dropdown'>
           <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>Settings <span class='caret'></span></a>
