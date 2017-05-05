@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception('You have to write twice the same password!');
             }
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            echo "<center><red>Username or email already exists in the database!<red></center>";
         }
     }
 }
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html >
     <head>
         <meta charset="UTF-8">
-        <title>Day 001 Login Form</title>
+        <title>Twitter: login page</title>
 
 
         <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Open+Sans:600'>

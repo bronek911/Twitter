@@ -46,15 +46,7 @@ class Conversation {
                 return true;
             }
         } else {
-//            $stmt = $conn->prepare('UPDATE Conversation SET message=:message WHERE id_message=:id_message');
-//            $result = $stmt->execute([
-//                'message' => $this->message,
-//                'id_message' => $this->id_message,
-//            ]);
-//
-//            if ($result === true) {
-//                return true;
-//            }
+
         }
         return false;
     }
