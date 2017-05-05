@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 }
             }
         }
-    }if (isset($_POST['newPass']) && isset($_POST['reNewPass']) && isset($_POST['oldPass'])) {
+    } else if (isset($_POST['newPass']) && isset($_POST['reNewPass']) && isset($_POST['oldPass'])) {
         if (trim($_POST['newPass']) === trim($_POST['reNewPass'])) {
             //Creating new object by username
             $user = User::loadUserByUsername($conn, $_SESSION['userName']);
@@ -90,9 +90,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $hashPass = password_hash($newPass, PASSWORD_BCRYPT, $options);
                 $user->setHashPass($hashPass);
                 $user->saveToDB($conn);
-                
+
                 header('Location: main.php');
             }
+        }
+    } else if (isset($_POST['file']) && $_POST['file'] == 1) {
+
+        $user = User::loadUserByUsername($conn, $_SESSION['userName']);
+        $target_dir = "img/users/";
+        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+        
+        if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target_file)) {
+            echo "File is valid, and was successfully uploaded.\n";
+        } else {
+            echo "Possible file upload attack!\n";
         }
     }
 }
@@ -214,9 +225,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     </div>
 
 
-
-
-
+                    <form action="" method="post" enctype="multipart/form-data">
+                        Select image to upload:
+                        <input type="file" name="fileToUpload" id="fileToUpload">
+                        <input type='hidden' name='file' value='1'>
+                        <input type="submit" value="Upload Image" name="submit">
+                    </form>
                 </div>
             </div>
         </div>  

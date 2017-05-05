@@ -22,6 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Brak danych!";
     }
+}else if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+    if (isset($_GET['userId'])){
+        $userId = $_GET['userId'];
+    }else{
+        $userId = $_SESSION['userId'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -53,14 +59,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     &nbsp;
                 </div>
                 <div class="col-lg-6 col-mg-6 col-sm-6">
-
+                    
                     <?php
+                    
+                    if (isset($_GET['userId']) && $_GET['userId'] !== $_SESSION['userId']){
+                    echo "
+                        <form action='send_message.php' method='get'>
+                            <input type='hidden' name='userId' value='$userId'>
+                            <button type='submit' class='btn btn-primary btn-block'>Show conversation</button>
+                        </form>
+                    <br>";
+                    }
+                    
 //Form for adding a tweet
                     showTweetTextarea();
 
 //Displaying tweets
-
-                    $tweets = Tweets::loadAllUserTweets($conn, $_SESSION['userId']);
+                    
+                    $tweets = Tweets::loadAllUserTweets($conn, $userId);
 
                     for ($i = 0; $i < count($tweets); $i++) {
 

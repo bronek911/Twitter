@@ -26,6 +26,7 @@ function showTweet($tweets, $i, $conn) {
     echo "<div class='panel panel-default'>
             <div class='panel-heading' style='height:40px;'>";
 
+if($_SESSION['userId'] === $tweets[$i]->getId_user()){
     echo" <span class='navbar-right' style='margin-right:10px;margin-top:0px;'>
                     <div class='dropdown'>
                         <a class='dropdown-toggle' data-toggle='dropdown' href='#'><span class='glyphicon glyphicon-chevron-down'></span></a>
@@ -34,12 +35,14 @@ function showTweet($tweets, $i, $conn) {
                             <li role='presentation'><a role='menuitem' tabindex='-1' href='deleteTweet.php?id={$tweets[$i]->getId_tweet()}'>Usuń</a></li>
                         </ul>
                     </div>
-                </span>
-                </div>
+                </span>";
+    }
+
+    echo "</div>
                 <div class='panel-body'>
                     <div class='media'>
                         <div class='media-left media-top'>
-                            <img src='{$tweets[$i]->getImg_src()}' class='media-object' style='width:60px'><center><b>{$tweets[$i]->getUsername()}</b></center>
+                            <img src='{$tweets[$i]->getImg_src()}' class='media-object' style='width:60px'><center><b><a href='userTweets.php?userId={$tweets[$i]->getId_user()}'>{$tweets[$i]->getUsername()}</a></b></center>
                         </div>
                         <div class='media-body'>
                             <br>
@@ -96,14 +99,30 @@ function showCommentsByTweet(Tweets $tweet, $conn) {
         echo "
         <li class='list-group-item'>
             <small><small><b>{$comments[$i]->getUsername()} - {$comments[$i]->getDateTime()}</b>";
-            if($_SESSION['userId'] === $comments[$i]->getId_user()){
-                echo " - 
+        if ($_SESSION['userId'] === $comments[$i]->getId_user()) {
+            echo " - 
                 <a href='editComment.php?id={$comments[$i]->getId_comment()}'>Edit</a>
                 <a href='deleteComment.php?id={$comments[$i]->getId_comment()}'>Delete</a>";
-            }
-            echo "</small></small><br>
+        }
+        echo "</small></small><br>
             {$comments[$i]->getCommentText()}
         </li>
     ";
     }
 }
+
+function showMessages($messages, $conn) {
+    
+    for ($i = 0; $i < count($messages); $i++) {
+        $username = User::loadUserById($conn, $messages[$i]->getId_sender());
+        echo "
+            
+        <div class='panel panel-default'>
+            <div class='panel-heading'>".$username->getUsername()."</div>
+            <div class='panel-body'>{$messages[$i]->getMessage()}</div>
+        </div>
+    ";
+    }
+}
+
+

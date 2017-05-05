@@ -74,7 +74,7 @@ class Tweets {
             ]);
 
             if ($result !== false) {
-                $this->id = $conn->lastInsertId();
+                $this->id_tweet = $conn->lastInsertId();
                 return true;
             }
         } else {

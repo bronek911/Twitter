@@ -33,15 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['userId'] = $user->getId();
                 $_SESSION['userName'] = $user->getUsername();
                 $_SESSION['userEmail'] = $user->getEmail();
-//                echo '<pre>';
-//                print_r($_SESSION);
-//                echo '</pre>';
-//                die();
                 //Redirects us to file main.php
                 header('Location: main.php');
             } else { //If isn't
-                //header('Location: index.php');
-                
+                header('Location: index.php');
             }
         } else {
             
