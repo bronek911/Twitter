@@ -97,9 +97,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else if (isset($_POST['file']) && $_POST['file'] == 1) {
 
         $user = User::loadUserByUsername($conn, $_SESSION['userName']);
+
+        // http://stackoverflow.com/questions/10368217/how-to-get-the-file-extension-in-php
+
         $target_dir = "img/users/";
-        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-        
+
+        $path = $_FILES['fileToUpload']['name'];
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+
+        $target_file = $target_dir . $_SESSION['userName'] . "." . $ext;
+
         if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target_file)) {
             echo "File is valid, and was successfully uploaded.\n";
         } else {
@@ -111,129 +118,132 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 <!DOCTYPE html>
 
 <html lang="pl">
-    <head>
+<head>
 
-        <meta charset="utf-8">
-        <title>Twitter</title>
-        <meta http-equiv="X-Ua-Compatibile" content="IE=edge,chrome=1">
+    <meta charset="utf-8">
+    <title>Twitter</title>
+    <meta http-equiv="X-Ua-Compatibile" content="IE=edge,chrome=1">
 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    </head>
+</head>
 
-    <body>
-
-
-        <?php require_once('top_nav.php'); ?>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-3 col-mg-3 col-sm-3">
-                    <?php require_once('left_bar.php'); ?>
-                </div>
-                <div class="col-lg-1 col-mg-1 col-sm-1">
-                    &nbsp;
-                </div>
-                <div class="col-lg-6 col-mg-6 col-sm-6">
+<body>
 
 
+<?php require_once('top_nav.php'); ?>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-mg-3 col-sm-3">
+            <?php require_once('left_bar.php'); ?>
+        </div>
+        <div class="col-lg-1 col-mg-1 col-sm-1">
+            &nbsp;
+        </div>
+        <div class="col-lg-6 col-mg-6 col-sm-6">
 
-                    <h2>User settings</h2>
-                    <br>
+
+            <h2>User settings</h2>
+            <br>
 
 
-                    <div class="panel-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#collapse1">Username: <?php echo $user->getUsername(); ?></a>
-                                </h4>
-                            </div>
-                            <div id="collapse1" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h4>Change username</h4>
-                                    <br>
-                                    <div class="form-group">
-                                        <form method="post" action="">
-                                            <label for="usr">New username:
-                                                <input type="text" class="form-control" id="newUserName" name="newUserName"></label><br>
-                                            <label for="usr">Enter password:
-                                                <input type="password" class="form-control" id="pass" name="pass"></label><br>
-                                            <label for="usr">Retype password:
-                                                <input type="password" class="form-control" id="rePass" name="rePass"></label>
-                                            <button type="submit" class="btn btn-default">Set new username</button>
-                                        </form>
-                                    </div>
-                                </div>
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse"
+                               href="#collapse1">Username: <?php echo $user->getUsername(); ?></a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h4>Change username</h4>
+                            <br>
+                            <div class="form-group">
+                                <form method="post" action="">
+                                    <label for="usr">New username:
+                                        <input type="text" class="form-control" id="newUserName"
+                                               name="newUserName"></label><br>
+                                    <label for="usr">Enter password:
+                                        <input type="password" class="form-control" id="pass" name="pass"></label><br>
+                                    <label for="usr">Retype password:
+                                        <input type="password" class="form-control" id="rePass" name="rePass"></label>
+                                    <button type="submit" class="btn btn-default">Set new username</button>
+                                </form>
                             </div>
                         </div>
                     </div>
-
-                    <div class="panel-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#collapse2">Email: <?php echo $user->getEmail(); ?></a>
-                                </h4>
-                            </div>
-                            <div id="collapse2" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h4>Change email</h4>
-                                    <br>
-                                    <div class="form-group">
-                                        <form method="post" action="">
-                                            <label for="usr">New email:
-                                                <input type="text" class="form-control" id="newEmail" name="newEmail"></label><br>
-                                            <label for="usr">Enter password:
-                                                <input type="password" class="form-control" id="pass" name="pass"></label><br>
-                                            <label for="usr">Retype password:
-                                                <input type="password" class="form-control" id="rePass" name="rePass"></label>
-                                            <button type="submit" class="btn btn-default">Set new email</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#collapse3">Password</a>
-                                </h4>
-                            </div>
-                            <div id="collapse3" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h4>Change password</h4>
-                                    <br>
-                                    <div class="form-group">
-                                        <form method="post" action="">
-                                            <label for="usr">New password:
-                                                <input type="password" class="form-control" id="newPass" name="newPass"></label><br>
-                                            <label for="usr">Retype new password:
-                                                <input type="password" class="form-control" id="reNewPass" name="reNewPass"></label><br>
-                                            <label for="usr">Old password:
-                                                <input type="password" class="form-control" id="oldPass" name="oldPass"></label>
-                                            <button type="submit" class="btn btn-default">Set new password</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <form action="" method="post" enctype="multipart/form-data">
-                        Select image to upload:
-                        <input type="file" name="fileToUpload" id="fileToUpload">
-                        <input type='hidden' name='file' value='1'>
-                        <input type="submit" value="Upload Image" name="submit">
-                    </form>
                 </div>
             </div>
-        </div>  
-    </body>
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse2">Email: <?php echo $user->getEmail(); ?></a>
+                        </h4>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h4>Change email</h4>
+                            <br>
+                            <div class="form-group">
+                                <form method="post" action="">
+                                    <label for="usr">New email:
+                                        <input type="text" class="form-control" id="newEmail"
+                                               name="newEmail"></label><br>
+                                    <label for="usr">Enter password:
+                                        <input type="password" class="form-control" id="pass" name="pass"></label><br>
+                                    <label for="usr">Retype password:
+                                        <input type="password" class="form-control" id="rePass" name="rePass"></label>
+                                    <button type="submit" class="btn btn-default">Set new email</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse3">Password</a>
+                        </h4>
+                    </div>
+                    <div id="collapse3" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h4>Change password</h4>
+                            <br>
+                            <div class="form-group">
+                                <form method="post" action="">
+                                    <label for="usr">New password:
+                                        <input type="password" class="form-control" id="newPass" name="newPass"></label><br>
+                                    <label for="usr">Retype new password:
+                                        <input type="password" class="form-control" id="reNewPass"
+                                               name="reNewPass"></label><br>
+                                    <label for="usr">Old password:
+                                        <input type="password" class="form-control" id="oldPass" name="oldPass"></label>
+                                    <button type="submit" class="btn btn-default">Set new password</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <form action="" method="post" enctype="multipart/form-data">
+                Select image to upload:
+                <input type="file" name="fileToUpload" id="fileToUpload">
+                <input type='hidden' name='file' value='1'>
+                <input type="submit" value="Upload Image" name="submit">
+            </form>
+        </div>
+    </div>
+</div>
+</body>
 
 </html>

@@ -1,5 +1,4 @@
 <?php
-
 require_once('src/headers.php');
 
 $id_user = $_SESSION['userId'];
@@ -39,20 +38,54 @@ echo "
       </ul>
       <form class='navbar-form navbar-right'>
         <div class='form-group'>
-          <input type='text' class='form-control' placeholder='Search'>
+          <input type='text' class='form-control' placeholder='Not working (yet)'>
         </div>
         <button type='submit' class='btn btn-default'>Submit</button>
       </form>
       <ul class='nav navbar-nav navbar-right'>
         <li class='dropdown'>
           <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>Messages <span class='caret'></span></a>
-          <ul class='dropdown-menu'>
-            <li style='width: 300px; margin-bottom: 10px; margin-left: 10px;'>
-                <small><small><b>Abcdefghijk</b></small></small><br>
-                <a href='#'>Separated link</a>
-            </li>
-            <li role='separator' class='divider'></li>
+          <ul class='dropdown-menu'>";
+          
+            $userConversations = Conversation::loadUsersConversations($conn, $_SESSION['userId'], 5);
+            
+            for($i = 0; $i < count($userConversations); $i++){
+                $id_sender = $userConversations[$i]->getId_sender();
+                $id_receiver = $userConversations[$i]->getId_receiver();
+                
+                if($id_sender == $_SESSION['userId']){
+                    $id_sender = $userConversations[$i]->getId_receiver();
+                    $username = User::loadUserById($conn, $id_receiver)->getUsername();
+                    $userId = $id_receiver;
+                } else if($id_receiver == $_SESSION['userId']){
+                    $id_receiver = $userConversations[$i]->getId_sender();
+                    $username = User::loadUserById($conn, $id_sender)->getUsername();
+                    $userId = $id_sender;
+                }
+                
+                $dateTime = $userConversations[$i]->getLastMessageDatetime();
+                $lastMesstage = $userConversations[$i]->getLastMessage();
+                
+                echo "<li style='width: 300px; margin-bottom: 10px; margin-left: 10px;'>
+                    <small><small><b>$username</b> - </small>$dateTime</small><br>
+                    <a href='send_message.php?userId=$userId'>";
+                    
+                    if($userConversations[$i]->getLastMessageStatus()==1 && $userConversations[$i]->getLastMessageSender()!=$_SESSION['userId']){
+                        echo "<b>".$lastMesstage."</b>";
+                    } else {
+                        echo $lastMesstage;
+                    }
+                
+                    
+                    echo "</a>
+                </li>";
+            }
+            
+            echo "<li role='separator' class='divider'></li>
+            
             <li><a href='messages.php'>Read all messages</a></li>
+            
+
           </ul>
         </li>
       </ul>

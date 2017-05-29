@@ -136,11 +136,10 @@ class Tweets {
 
     static public function loadAllUserTweets(PDO $conn, $id_user) {
         $ret = [];
-        $stmt = $conn->prepare('SELECT id_tweet, id_user, tweet, dateTime, username, img_src FROM Tweets JOIN users ON Tweets.id_user=users.id WHERE Tweets.id_user=:id_user ORDER BY Tweets.id_tweet DESC;');
+        $stmt = $conn->prepare('SELECT t.id_tweet, t.id_user, t.tweet, t.dateTime, u.username, u.img_src FROM Tweets t JOIN users u ON t.id_user=u.id WHERE t.id_user=:id_user ORDER BY t.id_tweet DESC;');
         $stmt->execute(['id_user' => $id_user]);
         $result = $stmt->fetchAll();
-
-
+        
         if ($result !== false && count($result) != 0) {
             foreach ($result as $tweetNo => $tweet) {
                 $loadedTweets = new Tweets();

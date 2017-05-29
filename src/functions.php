@@ -37,7 +37,6 @@ if($_SESSION['userId'] === $tweets[$i]->getId_user()){
                     </div>
                 </span>";
     }
-
     echo "</div>
                 <div class='panel-body'>
                     <div class='media'>
@@ -114,14 +113,22 @@ function showCommentsByTweet(Tweets $tweet, $conn) {
 function showMessages($messages, $conn) {
     
     for ($i = 0; $i < count($messages); $i++) {
-        $username = User::loadUserById($conn, $messages[$i]->getId_sender());
-        echo "
+        
+        if($messages[$i]->getId_sender()!=$_SESSION['userId']){
             
+            $messages[$i]->setStatus(0);
+            $messages[$i]->saveToDB($conn);
+        }  
+        
+        $username = User::loadUserById($conn, $messages[$i]->getId_sender());
+        
+        echo "
         <div class='panel panel-default'>
             <div class='panel-heading'>".$username->getUsername()." - <small><small>".$messages[$i]->getDateTime()."</small></small></div>
             <div class='panel-body'>{$messages[$i]->getMessage()}</div>
         </div>
     ";
+        
     }
 }
 

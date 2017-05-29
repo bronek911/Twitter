@@ -6,7 +6,7 @@ if (!isset($_SESSION['isLogged']) || $_SESSION['isLogged'] !== 1) {
     header('Location: index.php');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['tweet'])) {
         $id_user = $_SESSION['userId'];
         $tweet = trim($_POST['tweet']);
@@ -22,11 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Brak danych!";
     }
-}else if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+}else if ($_SERVER['REQUEST_METHOD'] == 'GET'){
     if (isset($_GET['userId'])){
-        $userId = $_GET['userId'];
+        $idUser = $_GET['userId'];
     }else{
-        $userId = $_SESSION['userId'];
+        $idUser = $_SESSION['userId'];
     }
 }
 ?>
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (isset($_GET['userId']) && $_GET['userId'] !== $_SESSION['userId']){
                     echo "
                         <form action='send_message.php' method='get'>
-                            <input type='hidden' name='userId' value='$userId'>
+                            <input type='hidden' name='userId' value='$idUser'>
                             <button type='submit' class='btn btn-primary btn-block'>Show conversation</button>
                         </form>
                     <br>";
@@ -73,13 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
 //Form for adding a tweet
                     showTweetTextarea();
-
 //Displaying tweets
-                    
-                    $tweets = Tweets::loadAllUserTweets($conn, $userId);
+                    $tweets = Tweets::loadAllUserTweets($conn, $idUser);
 
                     for ($i = 0; $i < count($tweets); $i++) {
-
                         showTweet($tweets, $i, $conn);
                     }
                     ?>

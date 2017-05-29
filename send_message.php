@@ -17,8 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if(Conversation::checkConversationId($conn, $id_sender, $id_receiver)===null){
             $newConversation = new Conversation();
-            $newConversation->setId_sender($id_user);
-            $newConversation->setId_receiver($id_user2);
+            $newConversation->setId_sender($id_sender);
+            $newConversation->setId_receiver($id_receiver);
             $newConversation->saveToDB($conn);
         }
             
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: send_message.php?userId='.$id_receiver);
         }
     }
-}
+} 
 
 ?>
 <!DOCTYPE html>
@@ -75,7 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <br>
                     <?php
                         $id_conversation = Conversation::checkConversationId($conn, $_SESSION['userId'], $_GET['userId']);
+                                              
                         $loadedMessages = Messages::loadConversationMessages($conn, $id_conversation);
+                        
+                        
+                        
                         showMessages($loadedMessages, $conn);
                     ?>
                 </div>
